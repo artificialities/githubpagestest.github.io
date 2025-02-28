@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Incrementer Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .game-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .display-panel {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .number-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .multiplier-display {
+            font-size: 24px;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .increment-button {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .increment-button:hover {
+            background-color: #27ae60;
+        }
+
+        .special-button {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .special-button:hover:not(:disabled) {
+            background-color: #c0392b;
+        }
+
+        .special-button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .game-rules {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            text-align: left;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Number Incrementer Game</h1>
+        
+        <div class="display-panel">
+            <div class="number-display" id="numberDisplay">0</div>
+            <div class="multiplier-display">Increment value (x): <span id="multiplierDisplay">1</span></div>
+        </div>
+
+        <div class="button-container">
+            <button id="incrementButton" class="increment-button">Increase Number by x</button>
+            <button id="specialButton" class="special-button" disabled>Trade 20 points for +1 to x</button>
+        </div>
+
+        <div class="game-rules">
+            <h3>Game Rules:</h3>
+            <p>• Press the green button to increase your number by x (starts at 1).</p>
+            <p>• When your number reaches at least 20, you can use the red button to lower your number by 20 but increase x by 1.</p>
+            <p>• Higher x values mean faster number growth!</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize game variables
+        let currentNumber = 0;  // The main number that will be displayed
+        let incrementValue = 1; // The value of x, starting at 1
+        
+        // Get DOM elements
+        const numberDisplay = document.getElementById('numberDisplay');
+        const multiplierDisplay = document.getElementById('multiplierDisplay');
+        const incrementButton = document.getElementById('incrementButton');
+        const specialButton = document.getElementById('specialButton');
+
+        // Function to update the display
+        function updateDisplay() {
+            // Update the number and multiplier displays
+            numberDisplay.textContent = currentNumber;
+            multiplierDisplay.textContent = incrementValue;
+            
+            // Enable or disable the special button based on the current number
+            specialButton.disabled = currentNumber < 20;
+
+            // Add visual feedback for button state
+            if (currentNumber >= 20) {
+                specialButton.title = "Activated! Click to trade 20 points for +1 to x";
+            } else {
+                specialButton.title = `Need ${20 - currentNumber} more points to activate`;
+            }
+        }
+        
+        // Event listener for the increment button
+        incrementButton.addEventListener('click', function() {
+            // Increase the current number by the increment value
+            currentNumber += incrementValue;
+            
+            // Update the display to reflect the new values
+            updateDisplay();
+            
+            // Add a subtle animation to the number
+            numberDisplay.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                numberDisplay.style.transform = 'scale(1)';
+            }, 100);
+        });
+        
+        // Event listener for the special button
+        specialButton.addEventListener('click', function() {
+            // Only allow this action if the current number is at least 20
+            if (currentNumber >= 20) {
+                // Decrease the current number by 20
+                currentNumber -= 20;
+                
+                // Increase the increment value by 1
+                incrementValue += 1;
+                
+                // Update the display to reflect the new values
+                updateDisplay();
+                
+                // Add a subtle animation to the multiplier
+                multiplierDisplay.style.color = '#e74c3c';
+                setTimeout(() => {
+                    multiplierDisplay.style.color = '#3498db';
+                }, 300);
+            }
+        });
+        
+        // Initialize the display
+        updateDisplay();
+    </script>
+</body>
+</html>
